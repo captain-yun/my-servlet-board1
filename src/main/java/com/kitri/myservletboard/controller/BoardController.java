@@ -1,5 +1,7 @@
 package com.kitri.myservletboard.controller;
 
+import com.kitri.myservletboard.service.BoardService;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +13,8 @@ import java.io.PrintWriter;
 
 @WebServlet("/board/*")
 public class BoardController extends HttpServlet {
+    BoardService boardService = BoardService.getInstance();
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getPathInfo();
@@ -35,6 +39,7 @@ public class BoardController extends HttpServlet {
         System.out.println("command = " + command);
 
         if (command.equals("/board/list")) {
+            boardService.list(request, response);
             view += "boardList.html";
         } else if (command.equals("/board/createForm")) {
             view += "boardCreateForm.html";
@@ -42,12 +47,13 @@ public class BoardController extends HttpServlet {
             // 1. 폼으로부터 데이터를 받아온다.
             // 2. 받은 데이터를 서버 저장소에 저장한다.
             // 3. 저장이 성공하면 성공 메시지와 함께 게시판 리스트 페이지로 포와딩/리다이렉트 한다.
+            boardService.create(request, response);
         } else if (command.equals("/board/updateForm")) {
             view += "boardUpdateForm.html";
         } else if (command.equals("/board/update")) {
-
+            boardService.update(request, response);
         } else if (command.equals("/board/delete")) {
-
+            boardService.delete(request, response);
         } else {
             view += "boardList.html";
         }
